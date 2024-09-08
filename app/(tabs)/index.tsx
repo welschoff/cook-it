@@ -3,6 +3,7 @@ import { ListItem } from '@rneui/themed';
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 import ingredientData from '../../assets/ingredients.json';
+import IngredientList from '@/components/IngredientList';
 
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
@@ -43,27 +44,12 @@ export default function HomeScreen() {
         inputContainerStyle={{ backgroundColor: 'white' }}
         round
       ></SearchBar>
-      <FlatList
-        data={search ? filteredIngredients : []}
-        keyExtractor={(item) => item}
-        extraData={selectedIngredients}
-        renderItem={({ item }) => (
-          <ListItem
-            key={item}
-            bottomDivider
-            onPress={() => addIngredient(item)}
-            containerStyle={{
-              backgroundColor: selectedIngredients.includes(item)
-                ? '#D1F8A4'
-                : '',
-            }}
-          >
-            <ListItem.Content style={styles.listItem}>
-              <ListItem.Title>{item}</ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
-        )}
-      ></FlatList>
+      <IngredientList
+        searchValue={search}
+        filteredIngredients={filteredIngredients}
+        selectedIngredients={selectedIngredients}
+        addIngredient={addIngredient}
+      />
       <Text style={styles.h1}>ausgewählte Zutaten:</Text>
       <View style={styles.selectedIngredientsContainer}>
         {selectedIngredients.map((ingredient, index) => (
@@ -105,9 +91,5 @@ const styles = StyleSheet.create({
   selectedIngredientsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 });
