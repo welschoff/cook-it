@@ -1,9 +1,17 @@
-import { SearchBar, Chip } from '@rneui/base';
-import { ListItem } from '@rneui/themed';
+import { SearchBar } from '@rneui/base';
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Image,
+  SafeAreaView,
+} from 'react-native';
 import ingredientData from '../../assets/ingredients.json';
 import IngredientList from '@/components/IngredientList';
+import IngredientSelection from '../../components/IngredientSelection';
+import AllergenSelection from '@/components/AllergenSelection';
+import { Colors } from '@/constants/Colors';
 
 export default function HomeScreen() {
   const [search, setSearch] = useState('');
@@ -24,72 +32,89 @@ export default function HomeScreen() {
     }
   };
 
-  const addIngredient = (ingredient: string) => {
+  const toggleIngredient = (ingredient: string) => {
     setSelectedIngredients((prevSelected) => {
       if (prevSelected.includes(ingredient)) {
+        setSearch('');
         return prevSelected.filter((item) => item !== ingredient);
       } else {
+        setSearch('');
         return [...prevSelected, ingredient];
       }
     });
   };
 
   return (
-    <View style={styles.view}>
-      <SearchBar
-        placeholder="Zutaten. . ."
-        onChangeText={(search) => updateSearch(search)}
-        value={search}
-        onSubmitEditing={() => setSearch('')}
-        inputContainerStyle={{ backgroundColor: 'white' }}
-        round
-      ></SearchBar>
-      <IngredientList
-        searchValue={search}
-        filteredIngredients={filteredIngredients}
-        selectedIngredients={selectedIngredients}
-        addIngredient={addIngredient}
-      />
-      <Text style={styles.h1}>ausgewählte Zutaten:</Text>
-      <View style={styles.selectedIngredientsContainer}>
-        {selectedIngredients.map((ingredient, index) => (
-          <Chip
-            key={index}
-            title={ingredient}
-            icon={{
-              name: 'close',
-              type: 'font-awesome',
-              size: 20,
-              color: 'black',
-              onPress: () =>
-                setSelectedIngredients((prevIngredients) =>
-                  prevIngredients.filter((_, i) => i !== index)
-                ),
-            }}
-            iconRight
-            containerStyle={{
-              alignSelf: 'flex-start',
-            }}
-            buttonStyle={{ backgroundColor: '#D1F8A4', margin: 2 }}
-            titleStyle={{ color: 'black' }}
-          />
-        ))}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Image
+          style={styles.img}
+          source={require('../../assets/images/logo.png')}
+        />
       </View>
-    </View>
+      <View style={styles.search}>
+        <SearchBar
+          placeholder="Type in your ingredients"
+          onChangeText={(search) => updateSearch(search)}
+          value={search}
+          onSubmitEditing={() => setSearch('')}
+          inputContainerStyle={{
+            backgroundColor: 'white',
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderWidth: 1,
+            borderRadius: 50,
+          }}
+          containerStyle={{
+            backgroundColor: 'transparent',
+            padding: 0,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+          }}
+          round
+        />
+      </View>
+      <ScrollView>
+        {filteredIngredients.length > 0 ? (
+          <IngredientList
+            searchValue={search}
+            filteredIngredients={filteredIngredients}
+            selectedIngredients={selectedIngredients}
+            toggleIngredient={toggleIngredient}
+          />
+        ) : null}
+        <IngredientSelection
+          selectedIngredients={selectedIngredients}
+          toggleIngredient={toggleIngredient}
+        />
+        <AllergenSelection />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  h1: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
   },
-  view: {
-    marginTop: 80,
+  header: {
+    height: 250,
+    width: '100%',
+    backgroundColor: Colors.light.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
-  selectedIngredientsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  img: {
+    width: '50%',
+    height: '50%',
+    objectFit: 'contain',
+  },
+  search: {
+    marginTop: 200,
   },
 });

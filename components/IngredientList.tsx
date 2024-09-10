@@ -1,23 +1,18 @@
 import { ListItem } from '@rneui/base';
 import { FlatList, StyleSheet } from 'react-native';
-
-export type IngredientProps = {
-  searchValue: string;
-  filteredIngredients: string[];
-  selectedIngredients: string[];
-  addIngredient: (ingredient: string) => void;
-};
+import { IngredientProps } from '@/assets/types';
 
 export default function IngredientList({ ...props }: IngredientProps) {
   return (
     <FlatList
       data={props.searchValue ? props.filteredIngredients : []}
       keyExtractor={(item) => item}
+      extraData={props.selectedIngredients}
       renderItem={({ item }) => (
         <ListItem
           key={item}
           bottomDivider
-          onPress={() => props.addIngredient(item)}
+          onPress={() => props.toggleIngredient(item)}
           containerStyle={{
             backgroundColor: props.selectedIngredients.includes(item)
               ? '#D1F8A4'
