@@ -4,3 +4,7 @@ export type IngredientProps = {
   selectedIngredients: string[];
   toggleIngredient: (ingredient: string) => void;
 };
+
+export type RecipeProps = {
+  title: string;
+};
