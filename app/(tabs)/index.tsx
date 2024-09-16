@@ -118,8 +118,11 @@ export default function HomeScreen() {
         </View>
       )}
 
-      {recipeData && <RecipeScreen {...recipeData} />}
-      <Button title="test" onPress={() => setRecipeData(undefined)}></Button>
+      {recipeData && (
+        <View style={styles.recipeScreen}>
+          <RecipeScreen {...recipeData} resetRecipeData={() => setRecipeData(undefined)} />
+        </View>
+      )}
     </View>
   );
 }
@@ -149,5 +152,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  recipeScreen: {
+    flex: 1,
   },
 });

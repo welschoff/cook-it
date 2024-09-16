@@ -29,4 +29,5 @@ export type RecipeProps = {
   cooking_time?: number;
   risky_intolerances?: string[];
   intolerance_warnings?: string;
+  resetRecipeData: () => void;
 };
