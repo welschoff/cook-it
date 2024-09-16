@@ -1,11 +1,18 @@
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
-import { RecipeProps } from '@/assets/types';
 import { fonts } from '@/constants/Fonts';
 import { Card, Divider, Icon } from '@rneui/base';
 import { ScrollView } from 'react-native';
 import { Colors } from '@/constants/Colors';
+import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import { RecipeProps } from '@/assets/types';
 
-export default function RecipeScreen({ ...props }: RecipeProps) {
+export default function RecipeScreen() {
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const { ...data } = route.params as RecipeProps;
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -13,13 +20,13 @@ export default function RecipeScreen({ ...props }: RecipeProps) {
           containerStyle={{ alignSelf: 'flex-start' }}
           size={40}
           name="chevron-left"
-          onPress={() => props.resetRecipeData()}
+          onPress={() => navigation.goBack()}
         />
-        <Text style={fonts.h1}>{props.title}</Text>
+        <Text style={fonts.h1}>{data.title}</Text>
         <View>
           <Text style={fonts.h2}>Zutaten:</Text>
           <Divider orientation="horizontal" width={1} color={Colors.light.divider} />
-          {props.ingredients.map((ingredient, index) => (
+          {data.ingredients.map((ingredient, index) => (
             <View key={index}>
               <View style={styles.ingredients}>
                 <Text style={styles.ingredientUnit}>
@@ -33,7 +40,7 @@ export default function RecipeScreen({ ...props }: RecipeProps) {
           ))}
           <View style={styles.instructions}>
             <Text style={fonts.h2}>Kochanleitung:</Text>
-            {props.instructions?.map((instruction, index) => (
+            {data.instructions?.map((instruction, index) => (
               <Card key={index} containerStyle={{ backgroundColor: Colors.light.primary, borderRadius: 10 }}>
                 <Text style={fonts.h3}>
                   <Text style={fonts.h1}>{index + 1}.&nbsp;</Text>
@@ -45,13 +52,13 @@ export default function RecipeScreen({ ...props }: RecipeProps) {
           <View>
             <Card>
               <Card.Title>Nährwerte</Card.Title>
-              <Text>Kalorien: {props.macros?.calories}</Text>
+              <Text>Kalorien: {data.macros?.calories}</Text>
               <Card.Divider />
-              <Text>Eiweiß: {props.macros?.protein}</Text>
+              <Text>Eiweiß: {data.macros?.protein}</Text>
               <Card.Divider />
-              <Text>Kohlenhydrate: {props.macros?.carbs}</Text>
+              <Text>Kohlenhydrate: {data.macros?.carbs}</Text>
               <Card.Divider />
-              <Text>Fett: {props.macros?.fat}</Text>
+              <Text>Fett: {data.macros?.fat}</Text>
             </Card>
           </View>
         </View>
