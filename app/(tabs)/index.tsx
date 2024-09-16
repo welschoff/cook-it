@@ -5,7 +5,7 @@ import ingredientData from '../../assets/ingredients.json';
 import IngredientList from '@/components/IngredientList';
 import IngredientSelection from '../../components/IngredientSelection';
 import { Colors } from '@/constants/Colors';
-import Recipe from '@/components/Recipe';
+import RecipeScreen from '../screens/RecipeScreen';
 import { RecipeProps } from '@/assets/types';
 
 export default function HomeScreen() {
@@ -118,7 +118,8 @@ export default function HomeScreen() {
         </View>
       )}
 
-      {recipeData && <Recipe title={recipeData.title} ingredients={recipeData.ingredients} />}
+      {recipeData && <RecipeScreen {...recipeData} />}
+      <Button title="test" onPress={() => setRecipeData(undefined)}></Button>
     </View>
   );
 }
@@ -126,7 +127,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   header: {
     height: 250,
