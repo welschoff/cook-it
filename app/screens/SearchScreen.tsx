@@ -14,6 +14,7 @@ export default function SearchScreen() {
   const [search, setSearch] = useState('');
   const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const ingredients = ingredientData.zutaten;
 
@@ -40,6 +41,7 @@ export default function SearchScreen() {
   };
 
   const createRecipe = async () => {
+    setLoading(true);
     try {
       const response = await fetch('http://localhost:8080/chat', {
         method: 'POST',
@@ -62,6 +64,7 @@ export default function SearchScreen() {
       console.error(error);
     } finally {
       setSelectedIngredients([]);
+      setLoading(false);
     }
   };
 
@@ -101,8 +104,20 @@ export default function SearchScreen() {
         ) : null}
         <IngredientSelection selectedIngredients={selectedIngredients} toggleIngredient={toggleIngredient} />
         {/* <AllergenSelection /> */}
+      </View>
+      <View style={styles.button}>
         <Button
-          title="Search"
+          title="Rezept erstellen"
+          loading={loading}
+          buttonStyle={{
+            backgroundColor: Colors.light.primary,
+            borderRadius: 50,
+            marginHorizontal: 20,
+            marginBottom: 20,
+          }}
+          titleStyle={{ color: 'black' }}
+          loadingProps={{ color: 'black' }}
+          type="outline"
           onPress={() => createRecipe()}
           disabled={selectedIngredients.length === 0 ? true : false}
         ></Button>
@@ -139,5 +154,9 @@ const styles = StyleSheet.create({
   },
   recipeScreen: {
     flex: 1,
+  },
+  button: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
   },
 });

@@ -1,14 +1,12 @@
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { fonts } from '@/constants/Fonts';
-import { Card, Divider, Icon } from '@rneui/base';
+import { Card, Divider } from '@rneui/base';
 import { ScrollView } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import { RecipeProps } from '@/assets/types';
 
 export default function RecipeScreen() {
-  const navigation = useNavigation();
   const route = useRoute();
 
   const { ...data } = route.params as RecipeProps;
@@ -16,12 +14,6 @@ export default function RecipeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Icon
-          containerStyle={{ alignSelf: 'flex-start' }}
-          size={40}
-          name="chevron-left"
-          onPress={() => navigation.goBack()}
-        />
         <Text style={fonts.h1}>{data.title}</Text>
         <View>
           <Text style={fonts.h2}>Zutaten:</Text>
@@ -70,7 +62,6 @@ export default function RecipeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
   },
   ingredients: {
     flexDirection: 'row',
