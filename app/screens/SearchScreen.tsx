@@ -7,7 +7,6 @@ import IngredientSelection from '../../components/IngredientSelection';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { SearchScreenNavigationProp } from '@/assets/types';
-import Macros from '@/components/Macros';
 
 export default function SearchScreen() {
   const navigation = useNavigation<SearchScreenNavigationProp>();
@@ -16,10 +15,6 @@ export default function SearchScreen() {
   const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const [protein, setProtein] = useState({ min: '', max: '' });
-  const [carbs, setCarbs] = useState({ min: '', max: '' });
-  const [fat, setFat] = useState({ min: '', max: '' });
 
   const ingredients = ingredientData.zutaten;
 
@@ -45,15 +40,6 @@ export default function SearchScreen() {
     });
   };
 
-  const userPrompt = {
-    ingredients: selectedIngredients.map((ingredient) => ({ name: ingredient })),
-    macros: {
-      protein: { min: protein.min || '0', max: protein.max || '0' },
-      carbs: { min: carbs.min || '0', max: carbs.max || '0' },
-      fat: { min: fat.min || '0', max: fat.max || '0' },
-    },
-  };
-
   const createRecipe = async () => {
     setLoading(true);
     try {
@@ -63,7 +49,7 @@ export default function SearchScreen() {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userPrompt }),
+        body: JSON.stringify({ userPrompt: selectedIngredients.join(', ') }),
       });
 
       if (!response.ok) {
@@ -79,23 +65,6 @@ export default function SearchScreen() {
     } finally {
       setSelectedIngredients([]);
       setLoading(false);
-    }
-  };
-
-  const handleChange = (field: string, type: 'min' | 'max', value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, '');
-    switch (field) {
-      case 'protein':
-        setProtein((prev) => ({ ...prev, [type]: numericValue }));
-        break;
-      case 'carbs':
-        setCarbs((prev) => ({ ...prev, [type]: numericValue }));
-        break;
-      case 'fat':
-        setFat((prev) => ({ ...prev, [type]: numericValue }));
-        break;
-      default:
-        break;
     }
   };
 
@@ -136,15 +105,6 @@ export default function SearchScreen() {
         <IngredientSelection selectedIngredients={selectedIngredients} toggleIngredient={toggleIngredient} />
         {/* <AllergenSelection /> */}
       </View>
-      <Macros
-        proteinMin={protein.min}
-        proteinMax={protein.max}
-        carbsMin={carbs.min}
-        carbsMax={carbs.max}
-        fatMin={fat.min}
-        fatMax={fat.max}
-        handleChange={handleChange} // Die Funktion wird hier übergeben
-      />
       <View style={styles.button}>
         <Button
           title="Rezept erstellen"
@@ -159,7 +119,7 @@ export default function SearchScreen() {
           loadingProps={{ color: 'black' }}
           type="outline"
           onPress={() => createRecipe()}
-          // disabled={selectedIngredients.length === 0 ? true : false}
+          disabled={selectedIngredients.length === 0 ? true : false}
         ></Button>
       </View>
     </View>
@@ -198,12 +158,5 @@ const styles = StyleSheet.create({
   button: {
     flexGrow: 1,
     justifyContent: 'flex-end',
-  },
-  numberInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
   },
 });
