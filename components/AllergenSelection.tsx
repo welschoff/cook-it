@@ -6,10 +6,13 @@ export default function Nutritions() {
   const nutritions = ['Laktose', 'Gluten', 'Fruktose', 'Histamin', 'Sorbitin'];
 
   const [checkedState, setCheckedState] = useState<Record<string, boolean>>(
-    nutritions.reduce((state, nutrition) => {
-      state[nutrition] = false;
-      return state;
-    }, {} as Record<string, boolean>)
+    nutritions.reduce(
+      (state, nutrition) => {
+        state[nutrition] = false;
+        return state;
+      },
+      {} as Record<string, boolean>
+    )
   );
 
   const handleCheck = (nutrition: string) => {

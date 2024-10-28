@@ -14,9 +14,7 @@ export default function IngredientList({ ...props }: IngredientProps) {
           bottomDivider
           onPress={() => props.toggleIngredient(item)}
           containerStyle={{
-            backgroundColor: props.selectedIngredients.includes(item)
-              ? '#D1F8A4'
-              : '',
+            backgroundColor: props.selectedIngredients.includes(item) ? '#D1F8A4' : '',
           }}
         >
           <ListItem.Content style={styles.listItem}>
